@@ -1,4 +1,4 @@
-/*** 여기서부터 이 책의 모든 예제에서 공통으로 포함하여 사용하는 코드이다. ***/
+/*공통으로 사용하는 서버용 코드*/
 
 #include <sys/types.h> // basic type definitions
 #include <sys/socket.h> // socket(), AF_INET, ...
@@ -42,8 +42,8 @@ void err_display(int errcode)
     printf("[오류] %s\n", msgbuf);
 }
 
-/*** 여기까지가 이 책의 모든 예제에서 공통으로 포함하여 사용하는 코드이다. ***/
-/*** 2장 이후의 예제들은 Common.h를 포함하는 방식으로 이 코드를 사용한다.  ***/
+/* 모든 예제에서 공통으로 포함하여 사용하는 코드*/
+/* Common.h를 포함하는 방식으로 이 코드를 사용*/
 
 #define SERVERPORT 9000
 #define BUFSIZE    512
