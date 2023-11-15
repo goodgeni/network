@@ -3,7 +3,6 @@ CXXFLAGS = -Wall
 
 PROGRAMS = \
 	UDPServer UDPClient \
-	UDPServer6 UDPClient6 \
 	BroadcastReceiver BroadcastSender
 
 all: $(PROGRAMS)
