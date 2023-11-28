@@ -9,7 +9,7 @@ pthread_cond_t readCond;
 pthread_mutex_t writeMutex;
 pthread_mutex_t readMutex;
 int writeDone = 0;
-int readDone = 0;
+int readDone = 2;
 int buf[BUFSIZE];
 
 void *WriteThread(void *arg)
@@ -17,7 +17,7 @@ void *WriteThread(void *arg)
 	for (int k = 1; k <= 500; k++) {
 		// 읽기 완료 대기
 		pthread_mutex_lock(&readMutex);
-		while (readDone == 0)
+		while (readDone != 2)
 			pthread_cond_wait(&readCond, &readMutex);
 		readDone = 0;
 		pthread_mutex_unlock(&readMutex);
@@ -28,7 +28,7 @@ void *WriteThread(void *arg)
 
 		// 쓰기 완료 알림
 		pthread_mutex_lock(&writeMutex);
-		writeDone = 1;
+		writeDone = 2;
 		pthread_mutex_unlock(&writeMutex);
 		pthread_cond_signal(&writeCond);
 	}
@@ -42,7 +42,7 @@ void *ReadThread(void *arg)
 		pthread_mutex_lock(&writeMutex);
 		while (writeDone == 0)
 			pthread_cond_wait(&writeCond, &writeMutex);
-		writeDone = 0;
+		writeDone--;
 		pthread_mutex_unlock(&writeMutex);
 
 		// 읽은 데이터 출력 후 버퍼를 0으로 초기화
@@ -50,11 +50,11 @@ void *ReadThread(void *arg)
 		for (int i = 0; i < BUFSIZE; i++)
 			printf("%3d ", buf[i]);
 		printf("\n");
-		memset(buf, 0, sizeof(buf));
+//		memset(buf, 0, sizeof(buf));
 
 		// 읽기 완료 알림
 		pthread_mutex_lock(&readMutex);
-		readDone = 1;
+		readDone++;
 		pthread_mutex_unlock(&readMutex);
 		pthread_cond_signal(&readCond);
 	}
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
 	// 읽기 완료 알림
 	pthread_mutex_lock(&readMutex);
-	readDone = 1;
+	readDone = 2;
 	pthread_mutex_unlock(&readMutex);
 	pthread_cond_signal(&readCond);
 
